@@ -874,13 +874,32 @@ function tickCounters() {
    YOUTUBE API
 ══════════════════════════════════════════════════ */
 async function fetchYT(apiKey, liveOnly) {
-  const q = SEARCH_QUERIES[Math.floor(Math.random()*SEARCH_QUERIES.length)];
-  const eventType = liveOnly ? '&eventType=live' : '';
-  const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video${eventType}&maxResults=6&q=${encodeURIComponent(q)}&key=${apiKey}`;
+  const q = SEARCH_QUERIES[Math.floor(Math.random() * SEARCH_QUERIES.length)];
+
+  const base = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&q=${encodeURIComponent(q)}&key=${apiKey}`;
+
+  const url = liveOnly
+    ? base + "&eventType=live"
+    : base + "&order=date&publishedAfter=" + new Date(Date.now() - 24*60*60*1000).toISOString();
+
   const r = await fetch(url);
-  if (!r.ok) throw new Error(`YT API ${r.status}`);
   const d = await r.json();
-  return d.items || [];
+
+  const items = d.items || [];
+  const ids = items.map(i => i.id?.videoId).filter(Boolean).join(',');
+
+  if (!ids) return [];
+
+  const check = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=status&id=${ids}&key=${apiKey}`);
+  const checkData = await check.json();
+
+  const allowed = new Set(
+    (checkData.items || [])
+      .filter(v => v.status?.embeddable)
+      .map(v => v.id)
+  );
+
+  return items.filter(i => allowed.has(i.id.videoId));
 }
 
 async function doRefresh(silent = false) {
