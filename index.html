@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<!--
+  ╔══════════════════════════════════════════════════════════════════════════╗
+  ║         JCB OPS LIVE – HEAVY MACHINERY OPERATIONS CENTER v3.0           ║
+  ╠══════════════════════════════════════════════════════════════════════════╣
+  ║                                                                          ║
+  ║  SETUP CHECKLIST:                                                        ║
+  ║                                                                          ║
+  ║  1. YOUTUBE API KEY (required for auto-refresh):                         ║
+  ║     → console.cloud.google.com                                           ║
+  ║     → New Project → Enable "YouTube Data API v3"                         ║
+  ║     → Credentials → Create API Key                                       ║
+  ║     → Paste below: const YT_API_KEY = "YOUR_KEY_HERE"                   ║
+  ║                                                                          ║
+  ║  2. GOOGLE ADSENSE (monetization):                                       ║
+  ║     → adsense.google.com → Sign up with your site URL                   ║
+  ║     → Get approved (takes 1–2 weeks, need some traffic first)            ║
+  ║     → Replace YOUR_ADSENSE_CLIENT and YOUR_AD_SLOT placeholders below   ║
+  ║     → AdSense auto-ads also work — just paste their <script> in <head>  ║
+  ║                                                                          ║
+  ║  3. GITHUB PAGES DEPLOY:                                                 ║
+  ║     → Create repo → upload as index.html                                 ║
+  ║     → Settings → Pages → Deploy from main                                ║
+  ║     → Live in 2–5 minutes at yourusername.github.io/reponame            ║
+  ║                                                                          ║
+  ║  4. QUOTA NOTES:                                                         ║
+  ║     → Free tier = 10,000 units/day                                       ║
+  ║     → Each auto-refresh = ~100 units                                     ║
+  ║     → Auto-refresh every 30 min = ~48 searches/day = 4,800 units        ║
+  ║     → Safe headroom for manual searches too                              ║
+  ║                                                                          ║
+  ╚══════════════════════════════════════════════════════════════════════════╝
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="JCB OPS LIVE – Real-time heavy machinery operations center. Watch live JCB excavators, bulldozers and construction sites from India and worldwide.">
+<meta name="keywords" content="JCB live, excavator live stream, heavy machinery, construction live cam, JCB India">
+<title>JCB OPS LIVE • Heavy Machinery Operations Center</title>
+
+<!-- ═══ GOOGLE ADSENSE ═══════════════════════════════════════════════════
+     Replace with your actual AdSense script tag after approval.
+     Example:
+     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXX" crossorigin="anonymous"></script>
+═══════════════════════════════════════════════════════════════════════ -->
+<!-- ADSENSE_SCRIPT_PLACEHOLDER -->
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@400;600;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+/* ═══════════════════════════════════
+   VARIABLES
+═══════════════════════════════════ */
+:root {
+  --bg-void:       #080a0c;
+  --bg-panel:      #0d1117;
+  --bg-card:       #111820;
+  --bg-card-hover: #16202c;
+  --border:        #1e3a4a;
+  --orange:        #ff6600;
+  --orange-dim:    #cc4400;
+  --yellow:        #ffcc00;
+  --amber:         #ffaa00;
+  --cyan:          #00d4ff;
+  --green-ok:      #00ff88;
+  --red-alert:     #ff2244;
+  --text-primary:  #e8f4f8;
+  --text-dim:      #7a9aaa;
+  --text-faint:    #3a5a6a;
+  --font-hud:      'Orbitron', monospace;
+  --font-mono:     'Share Tech Mono', monospace;
+  --font-data:     'Barlow Condensed', sans-serif;
+  --glow-orange:   0 0 8px rgba(255,102,0,0.6), 0 0 20px rgba(255,102,0,0.3);
+  --glow-cyan:     0 0 8px rgba(0,212,255,0.5), 0 0 20px rgba(0,212,255,0.2);
+  --glow-yellow:   0 0 8px rgba(255,204,0,0.6), 0 0 20px rgba(255,204,0,0.3);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; background: var(--bg-void); color: var(--text-primary); font-family: var(--font-mono); overflow: hidden; }
+
+/* scanlines */
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: 9999;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 4px);
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════
+   LAYOUT
+═══════════════════════════════════ */
+#app {
+  display: grid;
+  grid-template-rows: 56px 1fr 52px;
+  grid-template-columns: 1fr 280px;
+  height: 100vh;
+}
+
+/* ═══════════════════════════════════
+   TOP BAR
+═══════════════════════════════════ */
+#topbar {
+  grid-column: 1 / -1;
+  background: linear-gradient(90deg,#0a1520,#0d1a28 50%,#0a1520);
+  border-bottom: 2px solid var(--orange);
+  box-shadow: var(--glow-orange);
+  display: flex; align-items: center; padding: 0 16px; gap: 20px;
+  position: relative; overflow: hidden;
+}
+#topbar::before {
+  content: ''; position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+  background: linear-gradient(90deg,transparent,rgba(255,102,0,0.05),transparent);
+  animation: sweep 6s linear infinite;
+}
+@keyframes sweep { to { left: 200%; } }
+
+.brand { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.brand-icon { font-size: 24px; animation: icon-pulse 2s ease-in-out infinite; }
+@keyframes icon-pulse {
+  0%,100% { filter: drop-shadow(0 0 6px var(--orange)); }
+  50%      { filter: drop-shadow(0 0 16px var(--orange)); }
+}
+.brand-title { font-family: var(--font-hud); font-size: 13px; font-weight: 900; letter-spacing: 3px; color: var(--orange); text-shadow: var(--glow-orange); }
+.brand-sub   { font-family: var(--font-hud); font-size: 8px; letter-spacing: 2px; color: var(--text-dim); }
+
+.vdiv { width: 1px; height: 36px; background: var(--border); flex-shrink: 0; }
+
+.counters { display: flex; gap: 20px; flex: 1; }
+.ctr { display: flex; flex-direction: column; align-items: center; min-width: 80px; }
+.ctr-label { font-family: var(--font-hud); font-size: 7px; letter-spacing: 2px; color: var(--text-faint); text-transform: uppercase; }
+.ctr-val   { font-family: var(--font-hud); font-size: 18px; font-weight: 700; line-height: 1.1; }
+.ctr-val.o { color: var(--orange); text-shadow: var(--glow-orange); }
+.ctr-val.c { color: var(--cyan);   text-shadow: var(--glow-cyan);   }
+.ctr-val.y { color: var(--yellow); text-shadow: var(--glow-yellow); }
+
+/* refresh status pill */
+#refresh-pill {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(0,212,255,0.08); border: 1px solid var(--cyan);
+  border-radius: 3px; padding: 4px 10px;
+  font-family: var(--font-hud); font-size: 7px; letter-spacing: 1.5px; color: var(--cyan);
+  transition: all 0.3s;
+}
+#refresh-pill.refreshing { border-color: var(--orange); color: var(--orange); background: rgba(255,102,0,0.08); }
+.pill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); animation: dot-blink 1.4s infinite; }
+#refresh-pill.refreshing .pill-dot { background: var(--orange); }
+@keyframes dot-blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+.live-badge {
+  background: var(--red-alert); color: #fff;
+  font-family: var(--font-hud); font-size: 8px; letter-spacing: 2px; padding: 3px 8px; border-radius: 2px;
+  animation: live-flash 1s ease-in-out infinite; box-shadow: 0 0 10px var(--red-alert);
+}
+@keyframes live-flash { 0%,100%{opacity:1} 50%{opacity:.6} }
+
+/* ═══════════════════════════════════
+   AD SLOT — TOP LEADERBOARD
+═══════════════════════════════════ */
+#ad-top {
+  grid-column: 1 / -1;
+  display: none; /* shown after AdSense approval — set display:flex */
+  align-items: center; justify-content: center;
+  height: 90px; background: rgba(13,17,23,0.9);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-hud); font-size: 8px; letter-spacing: 2px; color: var(--text-faint);
+}
+
+/* ═══════════════════════════════════
+   MAIN AREA
+═══════════════════════════════════ */
+#main-content {
+  grid-column: 1; grid-row: 2;
+  display: grid; grid-template-rows: 220px 1fr;
+  overflow: hidden; border-right: 1px solid var(--border);
+}
+
+/* MAP */
+#map-container { position: relative; overflow: hidden; border-bottom: 2px solid var(--orange-dim); }
+#map { width: 100%; height: 100%; background: #0a1520; }
+.map-label {
+  position: absolute; top: 8px; left: 8px; z-index: 1000;
+  background: rgba(8,10,12,.88); border: 1px solid var(--orange); border-radius: 3px;
+  padding: 4px 10px; font-family: var(--font-hud); font-size: 8px; letter-spacing: 2px;
+  color: var(--orange); box-shadow: var(--glow-orange); pointer-events: none;
+}
+.map-coords {
+  position: absolute; bottom: 8px; left: 8px; z-index: 1000;
+  background: rgba(8,10,12,.85); border: 1px solid var(--border); border-radius: 3px;
+  padding: 4px 10px; font-family: var(--font-mono); font-size: 9px; color: var(--text-dim); pointer-events: none;
+}
+.dig-flash {
+  position: absolute; width: 40px; height: 40px;
+  border: 3px solid var(--orange); border-radius: 50%; pointer-events: none; z-index: 999;
+  animation: dig-expand 1.2s ease-out forwards;
+}
+@keyframes dig-expand {
+  0%   { transform: translate(-50%,-50%) scale(.2); opacity: 1; }
+  100% { transform: translate(-50%,-50%) scale(4);  opacity: 0; }
+}
+.machine-marker {
+  width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 18px;
+  background: rgba(8,10,12,.88); border: 2px solid var(--orange); border-radius: 4px; cursor: pointer;
+  box-shadow: 0 0 8px rgba(255,102,0,.5); animation: marker-bob 3s ease-in-out infinite;
+}
+@keyframes marker-bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
+.machine-marker.active { border-color: var(--yellow); box-shadow: 0 0 16px var(--yellow); }
+
+/* VIDEO GRID SECTION */
+#video-grid-section {
+  overflow-y: auto; overflow-x: hidden; padding: 12px;
+  background: var(--bg-panel);
+  scrollbar-width: thin; scrollbar-color: var(--orange-dim) var(--bg-void);
+}
+#video-grid-section::-webkit-scrollbar { width: 6px; }
+#video-grid-section::-webkit-scrollbar-thumb { background: var(--orange-dim); border-radius: 3px; }
+
+.grid-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.grid-title  { font-family: var(--font-hud); font-size: 8px; letter-spacing: 2px; color: var(--text-dim); }
+.grid-meta   { display: flex; align-items: center; gap: 10px; }
+.grid-count  { font-family: var(--font-hud); font-size: 8px; color: var(--orange); }
+#next-refresh-label { font-family: var(--font-hud); font-size: 7px; color: var(--text-faint); letter-spacing: 1px; }
+
+#video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
+
+/* ═══════════════════════════════════
+   AD SLOT — MID GRID (between video rows)
+═══════════════════════════════════ */
+.ad-mid-slot {
+  grid-column: 1 / -1;
+  min-height: 90px;
+  background: rgba(13,17,23,0.6);
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-hud); font-size: 7px; letter-spacing: 2px; color: var(--text-faint);
+}
+/* Hide ad placeholders until AdSense active — remove this rule after approval */
+.ad-mid-slot { display: none; }
+
+/* VIDEO CARD */
+.video-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px;
+  overflow: hidden; cursor: pointer; transition: all .25s; position: relative;
+  animation: card-in .4s ease-out both;
+}
+@keyframes card-in { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+.video-card:hover  { border-color: var(--orange); background: var(--bg-card-hover); transform: translateY(-2px); box-shadow: 0 4px 20px rgba(255,102,0,.2); }
+.video-card.focused { border-color: var(--yellow); box-shadow: 0 0 20px rgba(255,204,0,.3); }
+.video-card.new-stream { border-color: var(--cyan); box-shadow: 0 0 16px rgba(0,212,255,.25); }
+
+.card-header { display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: rgba(255,102,0,.06); border-bottom: 1px solid var(--border); }
+.card-id     { font-family: var(--font-hud); font-size: 9px; color: var(--orange); letter-spacing: 1px; flex-shrink: 0; }
+.card-title  { font-family: var(--font-data); font-size: 11px; font-weight: 600; color: var(--text-primary); flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.card-live   { background: rgba(255,34,68,.15); border: 1px solid var(--red-alert); border-radius: 2px; padding: 1px 5px; font-family: var(--font-hud); font-size: 7px; color: var(--red-alert); letter-spacing: 1px; flex-shrink: 0; animation: live-flash 1s infinite; }
+.card-new    { background: rgba(0,212,255,.12); border: 1px solid var(--cyan); border-radius: 2px; padding: 1px 5px; font-family: var(--font-hud); font-size: 7px; color: var(--cyan); letter-spacing: 1px; flex-shrink: 0; }
+
+.card-video { width: 100%; aspect-ratio: 16/9; background: #030508; }
+.card-video iframe { width: 100%; height: 100%; border: none; display: block; }
+
+.card-footer { display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; }
+.card-location { font-size: 9px; color: var(--text-dim); font-family: var(--font-data); }
+.card-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green-ok); box-shadow: 0 0 6px var(--green-ok); animation: dot-blink 1.4s infinite; }
+
+/* ═══════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════ */
+#sidebar {
+  grid-column: 2; grid-row: 2 / 4;
+  background: var(--bg-panel); border-left: 1px solid var(--border);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.s-head {
+  padding: 10px 12px; background: rgba(255,102,0,.06); border-bottom: 1px solid var(--border);
+  font-family: var(--font-hud); font-size: 8px; letter-spacing: 2px; color: var(--orange);
+  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+}
+.s-badge { background: var(--orange); color: var(--bg-void); font-size: 7px; font-weight: 700; padding: 2px 5px; border-radius: 2px; }
+
+/* Machine units */
+#machine-status { padding: 8px 12px; border-bottom: 2px solid var(--border); flex-shrink: 0; }
+.m-row { display: grid; grid-template-columns: 22px 1fr auto; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid rgba(30,58,74,.35); }
+.m-row:last-child { border-bottom: none; }
+.m-emoji { font-size: 13px; }
+.m-info  { display: flex; flex-direction: column; gap: 1px; }
+.m-name  { font-family: var(--font-hud); font-size: 7px; color: var(--text-primary); letter-spacing: 1px; }
+.m-site  { font-family: var(--font-data); font-size: 9px; color: var(--text-dim); }
+.m-bar-wrap { width: 44px; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.m-bar-bg   { width: 100%; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.m-bar-fill { height: 100%; background: var(--orange); border-radius: 2px; transition: width 2s ease; }
+.m-pct { font-family: var(--font-hud); font-size: 7px; color: var(--text-dim); }
+
+/* ═══════════════════════════════════
+   AD SLOT — SIDEBAR
+═══════════════════════════════════ */
+#ad-sidebar {
+  flex-shrink: 0;
+  min-height: 250px;
+  background: rgba(13,17,23,0.6);
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  display: none; /* set display:flex after AdSense approval */
+  align-items: center; justify-content: center; flex-direction: column; gap: 8px;
+  font-family: var(--font-hud); font-size: 7px; letter-spacing: 2px; color: var(--text-faint);
+}
+
+/* Action log */
+#log-wrap { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+#action-log {
+  flex: 1; overflow-y: auto; padding: 8px 12px;
+  display: flex; flex-direction: column; gap: 4px;
+  scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+}
+#action-log::-webkit-scrollbar { width: 4px; }
+#action-log::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.log-entry {
+  display: grid; grid-template-columns: auto 1fr; gap: 8px;
+  padding: 5px 8px; border-radius: 3px; background: rgba(13,17,23,.6);
+  border-left: 2px solid transparent; animation: log-in .3s ease-out both; font-size: 9px;
+}
+@keyframes log-in { from{opacity:0;transform:translateX(10px)} to{opacity:1;transform:translateX(0)} }
+.log-entry.dig   { border-left-color: var(--orange); }
+.log-entry.move  { border-left-color: var(--cyan); }
+.log-entry.alert { border-left-color: var(--red-alert); }
+.log-entry.ok    { border-left-color: var(--green-ok); }
+.log-entry.load  { border-left-color: var(--yellow); }
+.log-entry.api   { border-left-color: var(--cyan); background: rgba(0,212,255,.05); }
+
+.log-time { font-family: var(--font-mono); font-size: 8px; color: var(--text-faint); white-space: nowrap; line-height: 1.6; }
+.log-text { font-family: var(--font-data); font-size: 10px; color: var(--text-dim); line-height: 1.5; }
+.log-text .h  { color: var(--text-primary); font-weight: 600; }
+.log-text .o  { color: var(--orange); }
+.log-text .c  { color: var(--cyan); }
+.log-text .y  { color: var(--yellow); }
+.log-text .r  { color: var(--red-alert); }
+.log-text .g  { color: var(--green-ok); }
+
+/* Dust meter */
+#dust-meter { padding: 10px 12px; border-top: 1px solid var(--border); flex-shrink: 0; }
+.dust-label { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.dust-title { font-family: var(--font-hud); font-size: 7px; letter-spacing: 2px; color: var(--text-dim); }
+.dust-val   { font-family: var(--font-hud); font-size: 7px; color: var(--yellow); }
+.dust-bg    { width: 100%; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.dust-fill  { height: 100%; background: linear-gradient(90deg,var(--orange),var(--yellow)); border-radius: 3px; transition: width 3s ease; position: relative; }
+.dust-fill::after {
+  content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 20px;
+  background: linear-gradient(90deg,transparent,rgba(255,255,255,.3));
+  animation: shimmer 1.5s linear infinite;
+}
+@keyframes shimmer { 0%{opacity:0} 50%{opacity:1} 100%{opacity:0} }
+
+/* ═══════════════════════════════════
+   BOTTOM BAR
+═══════════════════════════════════ */
+#bottombar {
+  grid-column: 1; grid-row: 3;
+  background: linear-gradient(90deg,#0a1520,#0d1a28);
+  border-top: 2px solid var(--orange); box-shadow: 0 -4px 20px rgba(255,102,0,.1);
+  display: flex; align-items: center; padding: 0 12px; gap: 8px;
+}
+
+.btn {
+  display: flex; align-items: center; gap: 6px; padding: 7px 14px;
+  border: 1px solid var(--border); border-radius: 3px; background: rgba(255,102,0,.06);
+  color: var(--text-dim); font-family: var(--font-hud); font-size: 8px; letter-spacing: 1.5px;
+  cursor: pointer; transition: all .2s; white-space: nowrap; text-transform: uppercase; position: relative; overflow: hidden;
+}
+.btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg,transparent,rgba(255,102,0,.08),transparent);
+  transform: translateX(-100%); transition: transform .4s;
+}
+.btn:hover::before { transform: translateX(100%); }
+.btn:hover         { border-color: var(--orange); color: var(--orange); box-shadow: var(--glow-orange); }
+.btn.primary       { border-color: var(--orange); color: var(--orange); background: rgba(255,102,0,.12); }
+.btn.primary:hover { background: rgba(255,102,0,.22); }
+.btn.active        { border-color: var(--yellow); color: var(--yellow); background: rgba(255,204,0,.1); }
+.btn:disabled      { opacity: .5; cursor: not-allowed; }
+
+.btn-spin { display: none; width: 10px; height: 10px; border: 2px solid transparent; border-top-color: var(--orange); border-radius: 50%; animation: spin .6s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+
+.bar-status { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.conn-ind   { display: flex; align-items: center; gap: 6px; font-family: var(--font-hud); font-size: 8px; letter-spacing: 1.5px; color: var(--green-ok); }
+.conn-dot   { width: 6px; height: 6px; border-radius: 50%; background: var(--green-ok); box-shadow: 0 0 6px var(--green-ok); animation: dot-blink 1.4s infinite; }
+
+/* ═══════════════════════════════════
+   NOTIFICATIONS
+═══════════════════════════════════ */
+
+/* Notification toast */
+#toast {
+  position: fixed; top: 68px; right: 296px; z-index: 9997;
+  background: var(--bg-card); border: 1px solid var(--orange); border-radius: 4px;
+  padding: 10px 16px; font-family: var(--font-hud); font-size: 9px; letter-spacing: 1.5px;
+  color: var(--orange); box-shadow: var(--glow-orange);
+  transform: translateY(-20px); opacity: 0; transition: all .3s; pointer-events: none;
+}
+#toast.show { transform: translateY(0); opacity: 1; }
+#toast.cyan { border-color: var(--cyan); color: var(--cyan); box-shadow: var(--glow-cyan); }
+#toast.green { border-color: var(--green-ok); color: var(--green-ok); }
+
+/* Leaflet dark overrides */
+.leaflet-container { background: #080c12 !important; font-family: var(--font-mono); }
+.leaflet-control-attribution { background: rgba(8,10,12,.7) !important; color: var(--text-faint) !important; font-size: 8px !important; }
+.leaflet-control-zoom a { background: var(--bg-card) !important; color: var(--text-dim) !important; border-color: var(--border) !important; }
+.leaflet-control-zoom a:hover { background: var(--bg-card-hover) !important; color: var(--orange) !important; }
+.leaflet-popup-content-wrapper { background: var(--bg-card); border: 1px solid var(--orange); border-radius: 4px; color: var(--text-primary); box-shadow: var(--glow-orange); }
+.leaflet-popup-tip { background: var(--bg-card); }
+.leaflet-popup-content { font-family: var(--font-mono); font-size: 10px; margin: 10px 14px; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  #app { grid-template-columns: 1fr; grid-template-rows: 56px 180px 1fr 52px; }
+  #sidebar { display: none; }
+  #main-content { grid-column: 1; border-right: none; }
+  #bottombar { grid-column: 1; overflow-x: auto; }
+}
+
+* { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ══════════════════════════════════════
+     TOP BAR
+══════════════════════════════════════ -->
+<div id="topbar">
+  <div class="brand">
+    <div class="brand-icon">🚜</div>
+    <div>
+      <div class="brand-title">JCB OPS LIVE</div>
+      <div class="brand-sub">HEAVY MACHINERY OPERATIONS CENTER</div>
+    </div>
+  </div>
+  <div class="vdiv"></div>
+  <div class="counters">
+    <div class="ctr"><div class="ctr-label">ACTIVE CAMS</div><div class="ctr-val o" id="cnt-cams">00</div></div>
+    <div class="ctr"><div class="ctr-label">SITES ONLINE</div><div class="ctr-val c" id="cnt-sites">00</div></div>
+    <div class="ctr"><div class="ctr-label">TONS MOVED</div><div class="ctr-val y" id="cnt-tons">0</div></div>
+    <div class="ctr"><div class="ctr-label">DIG EVENTS</div><div class="ctr-val o" id="cnt-digs">000</div></div>
+  </div>
+  <div id="refresh-pill">
+    <div class="pill-dot"></div>
+    <span id="refresh-status">AUTO-REFRESH ON</span>
+  </div>
+  <div class="vdiv"></div>
+  <div class="live-badge">● LIVE</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     MAIN CONTENT
+══════════════════════════════════════ -->
+<div id="main-content">
+
+  <!-- MAP -->
+  <div id="map-container">
+    <div class="map-label">⚡ TACTICAL OPS MAP — ACTIVE SITES</div>
+    <div class="map-coords" id="map-coords">LAT: 22.5000° N &nbsp;|&nbsp; LNG: 80.0000° E &nbsp;|&nbsp; ZOOM: 5</div>
+    <div id="map"></div>
+  </div>
+
+  <!-- VIDEO GRID -->
+  <div id="video-grid-section">
+    <div class="grid-header">
+      <div class="grid-title">⬛ LIVE FEED MATRIX — CLICK CAM TO FOCUS</div>
+      <div class="grid-meta">
+        <div id="next-refresh-label">NEXT REFRESH: --:--</div>
+        <div class="grid-count" id="grid-count">0 STREAMS</div>
+      </div>
+    </div>
+    <div id="video-grid">
+      <!-- Ad slot injected after 4th card -->
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════
+     SIDEBAR
+══════════════════════════════════════ -->
+<div id="sidebar">
+
+  <div class="s-head">ACTIVE UNITS <span class="s-badge" id="unit-count">0</span></div>
+  <div id="machine-status"></div>
+
+  <!-- SIDEBAR AD SLOT -->
+  <!-- 
+    After AdSense approval, replace this comment with:
+    <div id="ad-sidebar" style="display:flex">
+      <ins class="adsbygoogle" style="display:block;width:260px;height:250px"
+           data-ad-client="ca-pub-XXXXXXXXXX" data-ad-slot="XXXXXXXXXX"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+  -->
+
+  <div id="log-wrap">
+    <div class="s-head">FIELD ACTION LOG <span class="s-badge" id="log-count">0</span></div>
+    <div id="action-log"></div>
+  </div>
+
+  <div id="dust-meter">
+    <div class="dust-label">
+      <div class="dust-title">⚠ DUST CLOUD INDEX</div>
+      <div class="dust-val" id="dust-pct">72%</div>
+    </div>
+    <div class="dust-bg"><div class="dust-fill" id="dust-fill" style="width:72%"></div></div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════
+     BOTTOM BAR
+══════════════════════════════════════ -->
+<div id="bottombar">
+  <button class="btn" onclick="triggerDustAlert()"><span>💨</span><span>DUST ALERT</span></button>
+  <button class="btn" onclick="replayLastDig()"><span>⚡</span><span>REPLAY DIG</span></button>
+  <button class="btn" onclick="shareOps()"><span>🔗</span><span>SHARE OPS</span></button>
+  <div class="bar-status">
+    <div class="conn-ind"><div class="conn-dot"></div><span>CONNECTED • REAL TIME</span></div>
+  </div>
+</div>
+
+</div><!-- #app -->
+
+
+
+<!-- Toast notification -->
+<div id="toast"></div>
+
+<script>
+const YT_API_KEY = "AIzaSyAAaYCRlGHKopxwMBwSxjZxo06ZpADPclY";
+
+/* ══════════════════════════════════════════════════
+   AUTO-REFRESH CONFIG
+══════════════════════════════════════════════════ */
+const REFRESH_INTERVAL_MS = 30 * 60 * 1000; // 30 minutes
+const SEARCH_QUERIES = [
+  "JCB excavator digging",
+  "heavy machinery construction live",
+  "excavator action india",
+  "JCB india construction",
+  "bulldozer heavy equipment"
+];
+
+/* ══════════════════════════════════════════════════
+   HARDCODED STREAMS — 12 quality picks
+══════════════════════════════════════════════════ */
+const HARDCODED = [
+  { id:"JCB-01", title:"JCB Excavator – Satisfying Digging Action",       videoId:"BBuJBNPOJHo", location:"INDIA OPS • UTTAR PRADESH",     lat:26.8,  lng:80.9,  type:"excavator"    },
+  { id:"JCB-02", title:"Massive Excavator Loading Dump Trucks",            videoId:"L3_NvYLg7sk", location:"MAHARASHTRA • QUARRY SITE",    lat:19.2,  lng:73.2,  type:"excavator"    },
+  { id:"JCB-03", title:"Bulldozer Clearing Ground – Heavy Ops",            videoId:"b6MqHmCOtm4", location:"RAJASTHAN • ROAD WORKS",       lat:26.9,  lng:75.8,  type:"bulldozer"    },
+  { id:"JCB-04", title:"Excavator vs Hard Rock – Pure Power",              videoId:"NJwmcmvmPMI", location:"GUJARAT • MINING ZONE",        lat:23.2,  lng:72.6,  type:"excavator"    },
+  { id:"JCB-05", title:"Foundation Dig – Delhi Metro Project",             videoId:"U6DFWpMJhd4", location:"DELHI NCR • METRO PROJECT",    lat:28.6,  lng:77.3,  type:"construction" },
+  { id:"JCB-06", title:"Heavy Dump Trucks & Excavator Teamwork",           videoId:"mGFNL_wPmw8", location:"KARNATAKA • QUARRY OPS",      lat:15.3,  lng:75.7,  type:"truck"        },
+  { id:"JCB-07", title:"JCB in Action: Road Construction India",           videoId:"LX0qQY6-OTs", location:"MADHYA PRADESH • HIGHWAY",    lat:23.5,  lng:78.3,  type:"jcb"          },
+  { id:"JCB-08", title:"Crane Lifting – High-Rise Construction",           videoId:"Hig-lYz1Bec", location:"MUMBAI • HIGH-RISE BUILD",    lat:19.0,  lng:72.8,  type:"crane"        },
+  { id:"JCB-09", title:"Giant Wheel Loader Loading Rock",                  videoId:"T0C9zRYpBms", location:"ODISHA • IRON ORE MINE",      lat:20.9,  lng:85.1,  type:"excavator"    },
+  { id:"JCB-10", title:"Excavator Digging Deep Trench – Pipeline",        videoId:"Pd9R8cWoMVs", location:"PUNJAB • INFRASTRUCTURE",     lat:30.9,  lng:75.8,  type:"excavator"    },
+  { id:"JCB-11", title:"Night Construction – City Overpass Work",          videoId:"ZQ7hS_KWxuM", location:"HYDERABAD • FLYOVER SITE",    lat:17.4,  lng:78.5,  type:"construction" },
+  { id:"JCB-12", title:"Rock Breaking Hammer Attachment – Hard Ground",   videoId:"kzFT2y0tOow", location:"TAMIL NADU • QUARRY",         lat:11.1,  lng:78.7,  type:"excavator"    },
+];
+
+const MACHINES = [
+  { emoji:"🚜", name:"JCB-ALPHA",  site:"Delhi Metro Zone",   load:88 },
+  { emoji:"🏗️", name:"CRANE-07",  site:"Mumbai Skyrise",     load:62 },
+  { emoji:"🚛", name:"DUMP-12X",  site:"Karnataka Quarry",   load:95 },
+  { emoji:"⛏️", name:"DRILL-3B",  site:"Rajasthan Road",     load:71 },
+  { emoji:"🚜", name:"JCB-BRAVO", site:"Pune Site-4",        load:84 },
+  { emoji:"🚛", name:"HAUL-09K",  site:"Gujarat Mine",       load:55 },
+];
+
+const LOG_TMPL = [
+  { t:"dig",   f:(m,s)=>`<span class="h">${m}</span> breaking <span class="o">HARD ROCK</span> at <span class="h">${s}</span>` },
+  { t:"move",  f:(m,s)=>`<span class="h">${m}</span> bucket load <span class="c">+2.4T</span> transferred at <span class="h">${s}</span>` },
+  { t:"load",  f:(m,s)=>`Dump truck <span class="y">LOADED</span> — <span class="h">${m}</span> continuing at <span class="h">${s}</span>` },
+  { t:"alert", f:(m,s)=>`⚠ <span class="r">DUST CLOUD</span> at <span class="h">${s}</span> — visibility reduced` },
+  { t:"ok",    f:(m,s)=>`<span class="g">✓ CLEAR PASS</span> — <span class="h">${m}</span> depth +0.8m at <span class="h">${s}</span>` },
+  { t:"dig",   f:(m,s)=>`<span class="h">${m}</span> <span class="o">DIGGING HARD</span> — 3rd pass at <span class="h">${s}</span>` },
+  { t:"move",  f:(m,s)=>`<span class="h">${m}</span> repositioning to <span class="c">SECTOR-7</span> at <span class="h">${s}</span>` },
+  { t:"ok",    f:(m,s)=>`<span class="g">FOUNDATION DEPTH</span> confirmed at <span class="h">${s}</span>` },
+  { t:"alert", f:(m,s)=>`🔔 Rock density <span class="r">ELEVATED</span> at <span class="h">${s}</span>` },
+];
+
+/* ══════════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════════ */
+let streams        = [...HARDCODED];
+let map            = null;
+let mapMarkers     = [];
+let logCount       = 0;
+let digCount       = 143;
+let tonsCount      = 3842;
+let dustLevel      = 72;
+let lastDigLatLng  = null;
+let autoRefresh    = true;
+let refreshTimer   = null;
+let countdownTimer = null;
+let nextRefreshAt  = null;
+
+let adSlotInserted = false;
+
+/* ══════════════════════════════════════════════════
+   MAP
+══════════════════════════════════════════════════ */
+function initMap() {
+  map = L.map('map', { center:[22.5,80.0], zoom:5, zoomControl:true });
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution:'© OpenStreetMap © CARTO', subdomains:'abcd', maxZoom:19
+  }).addTo(map);
+  map.on('moveend zoomend', () => {
+    const c = map.getCenter(), z = map.getZoom();
+    document.getElementById('map-coords').innerHTML =
+      `LAT: ${c.lat.toFixed(4)}° N &nbsp;|&nbsp; LNG: ${c.lng.toFixed(4)}° E &nbsp;|&nbsp; ZOOM: ${z}`;
+  });
+  streams.forEach((s,i) => addMarker(s,i));
+}
+
+const typeEmoji = { excavator:'⛏️', bulldozer:'🚜', construction:'🏗️', truck:'🚛', crane:'🔩', jcb:'🚜' };
+
+function addMarker(stream) {
+  if (!stream.lat) return;
+  const icon = L.divIcon({
+    html:`<div class="machine-marker">${typeEmoji[stream.type]||'🚜'}</div>`,
+    className:'', iconSize:[32,32], iconAnchor:[16,16]
+  });
+  const m = L.marker([stream.lat, stream.lng], { icon })
+    .addTo(map)
+    .bindPopup(`
+      <strong style="color:var(--orange);font-family:var(--font-hud);font-size:10px">${stream.id}</strong><br>
+      <span style="color:var(--text-dim);font-size:9px">${stream.title}</span><br>
+      <span style="color:var(--cyan);font-size:9px">📍 ${stream.location}</span>
+    `)
+    .on('click', () => { focusCard(stream.id); digFlash(stream.lat, stream.lng); });
+  mapMarkers.push({ m, stream });
+}
+
+function digFlash(lat, lng) {
+  if (!map) return;
+  lastDigLatLng = { lat, lng };
+  const p = map.latLngToContainerPoint([lat, lng]);
+  const el = document.createElement('div');
+  el.className = 'dig-flash';
+  el.style.cssText = `left:${p.x}px;top:${p.y}px`;
+  document.getElementById('map-container').appendChild(el);
+  setTimeout(() => el.remove(), 1200);
+}
+
+/* ══════════════════════════════════════════════════
+   VIDEO GRID
+══════════════════════════════════════════════════ */
+function renderGrid() {
+  const grid = document.getElementById('video-grid');
+  grid.innerHTML = '';
+  streams.forEach((s, i) => {
+    // Insert ad placeholder after 4th card
+    if (i === 4 && !adSlotInserted) {
+      const adDiv = document.createElement('div');
+      adDiv.className = 'ad-mid-slot';
+      adDiv.id = 'ad-mid-grid';
+      adDiv.innerHTML = `
+        <!-- 
+          MID-GRID AD SLOT (728x90 leaderboard or responsive)
+          After AdSense approval, replace this div contents with:
+          <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXX"
+               data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
+          <script>(adsbygoogle = window.adsbygoogle || []).push({});<\/script>
+        -->
+        ADVERTISEMENT SLOT — ACTIVATE AFTER ADSENSE APPROVAL
+      `;
+      grid.appendChild(adDiv);
+      adSlotInserted = true;
+    }
+
+    const card = document.createElement('div');
+    card.className = 'video-card';
+    card.id = `card-${s.id}`;
+    card.style.animationDelay = `${Math.min(i,8)*0.05}s`;
+    const isNew = s.fromApi;
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="card-id">${s.id}</div>
+        <div class="card-title">${s.title}</div>
+        ${isNew
+          ? `<div class="card-new">NEW</div>`
+          : `<div class="card-live">LIVE</div>`}
+      </div>
+      <div class="card-video">
+        <iframe
+          src="https://www.youtube.com/embed/${s.videoId}?autoplay=0&rel=0&modestbranding=1"
+          title="${s.title}"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen loading="lazy"
+        ></iframe>
+      </div>
+      <div class="card-footer">
+        <div class="card-location">📍 ${s.location}</div>
+        <div class="card-dot"></div>
+      </div>
+    `;
+    card.addEventListener('click', e => { if (e.target.tagName !== 'IFRAME') focusCard(s.id); });
+    grid.appendChild(card);
+  });
+
+  document.getElementById('grid-count').textContent  = `${streams.length} STREAMS`;
+  document.getElementById('cnt-cams').textContent     = String(streams.length).padStart(2,'0');
+  document.getElementById('cnt-sites').textContent    = String(Math.max(5,streams.length-1)).padStart(2,'0');
+}
+
+function appendCard(s) {
+  const grid = document.getElementById('video-grid');
+  const card = document.createElement('div');
+  card.className = 'video-card new-stream';
+  card.id = `card-${s.id}`;
+  card.innerHTML = `
+    <div class="card-header">
+      <div class="card-id">${s.id}</div>
+      <div class="card-title">${s.title}</div>
+      <div class="card-new">NEW</div>
+    </div>
+    <div class="card-video">
+      <iframe
+        src="https://www.youtube.com/embed/${s.videoId}?autoplay=0&rel=0&modestbranding=1"
+        title="${s.title}"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen loading="lazy"
+      ></iframe>
+    </div>
+    <div class="card-footer">
+      <div class="card-location">📍 ${s.location}</div>
+      <div class="card-dot"></div>
+    </div>
+  `;
+  card.addEventListener('click', e => { if (e.target.tagName !== 'IFRAME') focusCard(s.id); });
+  grid.appendChild(card);
+  document.getElementById('grid-count').textContent = `${streams.length} STREAMS`;
+  document.getElementById('cnt-cams').textContent   = String(streams.length).padStart(2,'0');
+}
+
+function focusCard(id) {
+  document.querySelectorAll('.video-card').forEach(c => c.classList.remove('focused'));
+  const card = document.getElementById(`card-${id}`);
+  if (card) { card.classList.add('focused'); card.scrollIntoView({ behavior:'smooth', block:'center' }); }
+  const ms = mapMarkers.find(m => m.stream.id === id);
+  if (ms) { ms.m.openPopup(); digFlash(ms.stream.lat, ms.stream.lng); }
+}
+
+/* ══════════════════════════════════════════════════
+   MACHINE STATUS
+══════════════════════════════════════════════════ */
+function renderMachines() {
+  document.getElementById('machine-status').innerHTML = MACHINES.map(m => `
+    <div class="m-row">
+      <div class="m-emoji">${m.emoji}</div>
+      <div class="m-info">
+        <div class="m-name">${m.name}</div>
+        <div class="m-site">${m.site}</div>
+      </div>
+      <div class="m-bar-wrap">
+        <div class="m-bar-bg"><div class="m-bar-fill" id="bar-${m.name.replace(/\W/g,'')}" style="width:${m.load}%"></div></div>
+        <div class="m-pct"   id="pct-${m.name.replace(/\W/g,'')}'">${m.load}%</div>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('unit-count').textContent = MACHINES.length;
+}
+
+/* ══════════════════════════════════════════════════
+   ACTION LOG
+══════════════════════════════════════════════════ */
+function addLog(type, html) {
+  const log = document.getElementById('action-log');
+  const now = new Date().toTimeString().substring(0,8);
+  const entry = document.createElement('div');
+  entry.className = `log-entry ${type}`;
+  entry.innerHTML = `<div class="log-time">${now}</div><div class="log-text">${html}</div>`;
+  log.insertBefore(entry, log.firstChild);
+  while (log.children.length > 80) log.removeChild(log.lastChild);
+  logCount++;
+  document.getElementById('log-count').textContent = Math.min(logCount, 80);
+
+  if (type === 'dig' && Math.random() > 0.5) {
+    const s = streams[Math.floor(Math.random()*streams.length)];
+    if (s?.lat) digFlash(s.lat, s.lng);
+  }
+}
+
+function randomLog() {
+  const evt = LOG_TMPL[Math.floor(Math.random()*LOG_TMPL.length)];
+  const m   = MACHINES[Math.floor(Math.random()*MACHINES.length)].name;
+  const s   = MACHINES[Math.floor(Math.random()*MACHINES.length)].site;
+  addLog(evt.t, evt.f(m,s));
+}
+
+/* ══════════════════════════════════════════════════
+   LIVE COUNTERS
+══════════════════════════════════════════════════ */
+function tickCounters() {
+  tonsCount += Math.floor(Math.random()*8)+1;
+  document.getElementById('cnt-tons').textContent = tonsCount.toLocaleString();
+  if (Math.random()>.6) digCount++;
+  document.getElementById('cnt-digs').textContent = String(digCount).padStart(3,'0');
+
+  MACHINES.forEach(m => {
+    m.load = Math.max(35, Math.min(100, m.load + (Math.random()-0.5)*6));
+    const k = m.name.replace(/\W/g,'');
+    const b = document.getElementById(`bar-${k}`);
+    const p = document.getElementById(`pct-${k}`);
+    if (b) b.style.width   = `${Math.round(m.load)}%`;
+    if (p) p.textContent   = `${Math.round(m.load)}%`;
+  });
+
+  dustLevel = Math.max(20, Math.min(98, dustLevel + (Math.random()-0.5)*3));
+  document.getElementById('dust-fill').style.width = `${Math.round(dustLevel)}%`;
+  document.getElementById('dust-pct').textContent  = `${Math.round(dustLevel)}%`;
+}
+
+/* ══════════════════════════════════════════════════
+   YOUTUBE API
+══════════════════════════════════════════════════ */
+async function fetchYT(apiKey, liveOnly) {
+  const q = SEARCH_QUERIES[Math.floor(Math.random()*SEARCH_QUERIES.length)];
+  const eventType = liveOnly ? '&eventType=live' : '';
+  const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video${eventType}&maxResults=6&q=${encodeURIComponent(q)}&key=${apiKey}`;
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`YT API ${r.status}`);
+  const d = await r.json();
+  return d.items || [];
+}
+
+async function doRefresh(silent = false) {
+  const key = YT_API_KEY;
+  setRefreshing(true);
+  if (!silent) toast('📡 SCANNING FOR STREAMS...', 'orange');
+
+  try {
+    let items = [];
+    try { items = await fetchYT(key, true); } catch(e) {}
+    if (!items.length) items = await fetchYT(key, false);
+
+    let added = 0;
+    for (const item of items.slice(0,3)) {
+      const videoId = item.id?.videoId;
+      if (!videoId || streams.find(s => s.videoId === videoId)) continue;
+      const idx = streams.length + 1;
+      const newS = {
+        id: `API-${String(idx).padStart(2,'0')}`,
+        title: item.snippet.title.substring(0,52),
+        videoId,
+        location: `LIVE • ${item.snippet.channelTitle.substring(0,18).toUpperCase()}`,
+        lat: 18 + Math.random()*14,
+        lng: 70 + Math.random()*16,
+        type: "excavator",
+        fromApi: true
+      };
+      streams.push(newS);
+      addMarker(newS);
+      appendCard(newS);
+      addLog('api', `<span class="c">▶ NEW STREAM ACQUIRED</span> — <span class="h">${newS.id}</span> added to grid`);
+      added++;
+      await new Promise(r => setTimeout(r, 300));
+    }
+
+    if (added > 0) toast(`✓ ${added} NEW STREAM${added>1?'S':''} ACQUIRED`, 'green');
+    else if (!silent) toast('⚠ NO NEW STREAMS FOUND', 'orange');
+
+  } catch(err) {
+    console.error('YT API error:', err);
+    if (!silent) toast('✕ API ERROR — CHECK KEY IN SETUP', 'orange');
+  } finally {
+    setRefreshing(false);
+    if (autoRefresh) scheduleRefresh();
+  }
+}
+
+function setRefreshing(on) {
+  const pill = document.getElementById('refresh-pill');
+  const label = document.getElementById('refresh-status');
+  pill.classList.toggle('refreshing', on);
+  label.textContent = on ? 'REFRESHING...' : (autoRefresh ? 'AUTO-REFRESH ON' : 'AUTO-REFRESH OFF');
+}
+
+/* ══════════════════════════════════════════════════
+   AUTO-REFRESH SCHEDULER
+══════════════════════════════════════════════════ */
+function scheduleRefresh() {
+  clearTimeout(refreshTimer);
+  clearInterval(countdownTimer);
+  if (!autoRefresh) { document.getElementById('next-refresh-label').textContent = 'AUTO-REFRESH OFF'; return; }
+
+  nextRefreshAt = Date.now() + REFRESH_INTERVAL_MS;
+  refreshTimer = setTimeout(() => doRefresh(true), REFRESH_INTERVAL_MS);
+
+  // countdown display
+  countdownTimer = setInterval(() => {
+    const secs = Math.max(0, Math.round((nextRefreshAt - Date.now()) / 1000));
+    const m = String(Math.floor(secs/60)).padStart(2,'0');
+    const s = String(secs%60).padStart(2,'0');
+    document.getElementById('next-refresh-label').textContent = `NEXT REFRESH: ${m}:${s}`;
+    if (secs <= 0) clearInterval(countdownTimer);
+  }, 1000);
+}
+
+
+
+
+
+/* ══════════════════════════════════════════════════
+   BUTTON ACTIONS
+══════════════════════════════════════════════════ */
+function triggerDustAlert() {
+  dustLevel = Math.min(98, dustLevel + 20);
+  document.getElementById('dust-fill').style.width = `${Math.round(dustLevel)}%`;
+  document.getElementById('dust-pct').textContent  = `${Math.round(dustLevel)}%`;
+  toast('⚠ DUST ALERT — HIGH PARTICULATE DETECTED', 'orange');
+  addLog('alert','<span class="r">⚠ DUST CLOUD EVENT</span> — visibility reduced across active sites');
+  if (map) {
+    const s = streams[Math.floor(Math.random()*streams.length)];
+    if (s?.lat) [0,250,500].forEach(d => setTimeout(()=>digFlash(s.lat+(Math.random()-.5), s.lng+(Math.random()-.5)),d));
+  }
+}
+
+function replayLastDig() {
+  const target = lastDigLatLng || (streams[0] ? { lat:streams[0].lat, lng:streams[0].lng } : null);
+  if (target) [0,200,400].forEach(d => setTimeout(()=>digFlash(target.lat,target.lng),d));
+  toast('⚡ REPLAYING LAST DIG EVENT', 'orange');
+  addLog('dig','<span class="o">⚡ DIG REPLAY</span> — last impact sequence reconstructed');
+}
+
+function shareOps() {
+  const url = window.location.href;
+  if (navigator.share) navigator.share({ title:'JCB OPS LIVE', url });
+  else if (navigator.clipboard) { navigator.clipboard.writeText(url); toast('🔗 URL COPIED TO CLIPBOARD', 'cyan'); }
+}
+
+
+
+/* ══════════════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════════════ */
+let toastTimer = null;
+function toast(msg, type='orange') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `show ${type}`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.className = '', 3200);
+}
+
+/* ══════════════════════════════════════════════════
+   COUNTER ANIMATION
+══════════════════════════════════════════════════ */
+function animateCount(id, target, dur=1200, pad=0) {
+  const el = document.getElementById(id);
+  const t0 = Date.now();
+  const tick = () => {
+    const p = Math.min(1,(Date.now()-t0)/dur);
+    const v = Math.round(p*target);
+    el.textContent = pad ? String(v).padStart(pad,'0') : v.toLocaleString();
+    if (p<1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+
+/* ══════════════════════════════════════════════════
+   RANDOM DIG FLASH ON MAP
+══════════════════════════════════════════════════ */
+function scheduleFlash() {
+  const delay = 8000 + Math.random()*7000;
+  setTimeout(() => {
+    if (streams.length) {
+      const s = streams[Math.floor(Math.random()*streams.length)];
+      if (s?.lat) digFlash(s.lat, s.lng);
+    }
+    scheduleFlash();
+  }, delay);
+}
+
+/* ══════════════════════════════════════════════════
+   BOOT
+══════════════════════════════════════════════════ */
+window.addEventListener('DOMContentLoaded', () => {
+  // Boot log
+  const boot = [
+    { t:'ok',   h:`<span class="g">SYSTEM ONLINE</span> — JCB OPS LIVE v3.0 INITIALIZED` },
+    { t:'move', h:`<span class="c">MAP GRID LOADED</span> — ${streams.length} sites registered` },
+    { t:'dig',  h:`<span class="o">FEED MATRIX ACTIVE</span> — ${streams.length} cameras streaming` },
+    { t:'ok',   h:`<span class="g">AUTO-REFRESH ARMED</span> — 30-minute discovery cycle ready` },
+  ];
+  boot.reverse().forEach((b,i) => {
+    const log = document.getElementById('action-log');
+    const el  = document.createElement('div');
+    el.className = `log-entry ${b.t}`;
+    el.style.animationDelay = `${i*0.1}s`;
+    const now = new Date().toTimeString().substring(0,8);
+    el.innerHTML = `<div class="log-time">${now}</div><div class="log-text">${b.h}</div>`;
+    log.insertBefore(el, log.firstChild);
+  });
+  logCount = boot.length;
+  document.getElementById('log-count').textContent = logCount;
+
+  // Init components
+  initMap();
+  renderGrid();
+  renderMachines();
+
+  // Animate boot counters
+  animateCount('cnt-tons', tonsCount, 1500);
+  animateCount('cnt-digs', digCount,  1200, 3);
+
+  // Start timers
+  setInterval(tickCounters, 3000);
+
+  const logLoop = () => { randomLog(); setTimeout(logLoop, 4000 + Math.random()*4000); };
+  setTimeout(logLoop, 2500);
+
+  scheduleFlash();
+
+  // Auto-refresh always active — key hardcoded
+  scheduleRefresh();
+  toast('📡 AUTO-REFRESH ARMED — 30 MIN CYCLE', 'cyan');
+  addLog('api', `<span class="g">✓ SYSTEMS ARMED</span> — auto-refresh <span class="c">SCHEDULED</span>`);
+
+  console.log(`
+   ╔══════════════════════════════════════════╗
+   ║    JCB OPS LIVE v3.0 — SYSTEMS ONLINE   ║
+   ║  Auto-refresh: every 30 minutes          ║
+   ║  Quota usage:  ~4,800 units/day          ║
+   ║  AdSense slots: ready for activation     ║
+   ╚══════════════════════════════════════════╝
+  `);
+});
+</script>
+</body>
+</html>
