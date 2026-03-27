@@ -260,8 +260,28 @@ body::before {
 .card-live   { background: rgba(255,34,68,.15); border: 1px solid var(--red-alert); border-radius: 2px; padding: 1px 5px; font-family: var(--font-hud); font-size: 7px; color: var(--red-alert); letter-spacing: 1px; flex-shrink: 0; animation: live-flash 1s infinite; }
 .card-new    { background: rgba(0,212,255,.12); border: 1px solid var(--cyan); border-radius: 2px; padding: 1px 5px; font-family: var(--font-hud); font-size: 7px; color: var(--cyan); letter-spacing: 1px; flex-shrink: 0; }
 
-.card-video { width: 100%; aspect-ratio: 16/9; background: #030508; }
+.card-video { width: 100%; aspect-ratio: 16/9; background: #030508; position: relative; }
 .card-video iframe { width: 100%; height: 100%; border: none; display: block; }
+.card-thumb {
+  width: 100%; height: 100%; position: absolute; inset: 0;
+  background: #030508; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 10px;
+}
+.card-thumb img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; opacity: 0.7; }
+.card-thumb-play {
+  position: relative; z-index: 2;
+  width: 56px; height: 56px; background: var(--orange); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 20px rgba(255,102,0,0.6);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.card-thumb-play:hover { transform: scale(1.1); box-shadow: 0 0 30px rgba(255,102,0,0.9); }
+.card-thumb-play svg { width: 22px; height: 22px; fill: white; margin-left: 4px; }
+.card-thumb-label {
+  position: relative; z-index: 2;
+  font-family: var(--font-hud); font-size: 8px; letter-spacing: 2px; color: white;
+  background: rgba(255,102,0,0.8); padding: 4px 10px; border-radius: 2px;
+}
 
 .card-footer { display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; }
 .card-location { font-size: 9px; color: var(--text-dim); font-family: var(--font-data); }
@@ -682,29 +702,10 @@ function renderGrid() {
     card.className = 'video-card';
     card.id = `card-${s.id}`;
     card.style.animationDelay = `${Math.min(i,8)*0.05}s`;
-    const isNew = s.fromApi;
-    card.innerHTML = `
-      <div class="card-header">
-        <div class="card-id">${s.id}</div>
-        <div class="card-title">${s.title}</div>
-        ${isNew
-          ? `<div class="card-new">NEW</div>`
-          : `<div class="card-live">LIVE</div>`}
-      </div>
-      <div class="card-video">
-        <iframe
-          src="https://www.youtube.com/embed/${s.videoId}?autoplay=0&rel=0&modestbranding=1"
-          title="${s.title}"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen loading="lazy"
-        ></iframe>
-      </div>
-      <div class="card-footer">
-        <div class="card-location">📍 ${s.location}</div>
-        <div class="card-dot"></div>
-      </div>
-    `;
-    card.addEventListener('click', e => { if (e.target.tagName !== 'IFRAME') focusCard(s.id); });
+    card.innerHTML = makeVideoHTML(s, !!s.fromApi);
+    card.addEventListener('click', e => {
+      if (e.target.tagName !== 'IFRAME' && !e.target.closest('.card-thumb')) focusCard(s.id);
+    });
     grid.appendChild(card);
   });
 
@@ -713,31 +714,50 @@ function renderGrid() {
   document.getElementById('cnt-sites').textContent    = String(Math.max(5,streams.length-1)).padStart(2,'0');
 }
 
-function appendCard(s) {
-  const grid = document.getElementById('video-grid');
-  const card = document.createElement('div');
-  card.className = 'video-card new-stream';
-  card.id = `card-${s.id}`;
-  card.innerHTML = `
+function makeVideoHTML(s, isNew=false) {
+  const badge = isNew ? `<div class="card-new">NEW</div>` : `<div class="card-live">LIVE</div>`;
+  return `
     <div class="card-header">
       <div class="card-id">${s.id}</div>
       <div class="card-title">${s.title}</div>
-      <div class="card-new">NEW</div>
+      ${badge}
     </div>
-    <div class="card-video">
-      <iframe
-        src="https://www.youtube.com/embed/${s.videoId}?autoplay=0&rel=0&modestbranding=1"
-        title="${s.title}"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen loading="lazy"
-      ></iframe>
+    <div class="card-video" id="vid-${s.id}">
+      <div class="card-thumb" onclick="loadVideo('${s.id}','${s.videoId}')">
+        <img src="https://img.youtube.com/vi/${s.videoId}/hqdefault.jpg" alt="${s.title}" loading="lazy" onerror="this.style.display='none'">
+        <div class="card-thumb-play">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <div class="card-thumb-label">▶ CLICK TO PLAY</div>
+      </div>
     </div>
     <div class="card-footer">
       <div class="card-location">📍 ${s.location}</div>
       <div class="card-dot"></div>
     </div>
   `;
-  card.addEventListener('click', e => { if (e.target.tagName !== 'IFRAME') focusCard(s.id); });
+}
+
+function loadVideo(id, videoId) {
+  const wrap = document.getElementById(`vid-${id}`);
+  if (!wrap) return;
+  wrap.innerHTML = `<iframe
+    src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1"
+    title="JCB Video"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen
+  ></iframe>`;
+}
+
+function appendCard(s) {
+  const grid = document.getElementById('video-grid');
+  const card = document.createElement('div');
+  card.className = 'video-card new-stream';
+  card.id = `card-${s.id}`;
+  card.innerHTML = makeVideoHTML(s, true);
+  card.addEventListener('click', e => {
+    if (e.target.tagName !== 'IFRAME' && !e.target.closest('.card-thumb')) focusCard(s.id);
+  });
   grid.appendChild(card);
   document.getElementById('grid-count').textContent = `${streams.length} STREAMS`;
   document.getElementById('cnt-cams').textContent   = String(streams.length).padStart(2,'0');
