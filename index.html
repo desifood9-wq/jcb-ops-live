@@ -1,49 +1,49 @@
 <!DOCTYPE html>
 <!--
-  ╔══════════════════════════════════════════════════════════════════════════╗
-  ║         JCB OPS LIVE – HEAVY MACHINERY OPERATIONS CENTER v3.0           ║
-  ╠══════════════════════════════════════════════════════════════════════════╣
-  ║                                                                          ║
-  ║  SETUP CHECKLIST:                                                        ║
-  ║                                                                          ║
-  ║  1. YOUTUBE API KEY (required for auto-refresh):                         ║
-  ║     → console.cloud.google.com                                           ║
-  ║     → New Project → Enable "YouTube Data API v3"                         ║
-  ║     → Credentials → Create API Key                                       ║
-  ║     → Paste below: const YT_API_KEY = "YOUR_KEY_HERE"                   ║
-  ║                                                                          ║
-  ║  2. GOOGLE ADSENSE (monetization):                                       ║
-  ║     → adsense.google.com → Sign up with your site URL                   ║
-  ║     → Get approved (takes 1–2 weeks, need some traffic first)            ║
-  ║     → Replace YOUR_ADSENSE_CLIENT and YOUR_AD_SLOT placeholders below   ║
-  ║     → AdSense auto-ads also work — just paste their <script> in <head>  ║
-  ║                                                                          ║
-  ║  3. GITHUB PAGES DEPLOY:                                                 ║
-  ║     → Create repo → upload as index.html                                 ║
-  ║     → Settings → Pages → Deploy from main                                ║
-  ║     → Live in 2–5 minutes at yourusername.github.io/reponame            ║
-  ║                                                                          ║
-  ║  4. QUOTA NOTES:                                                         ║
-  ║     → Free tier = 10,000 units/day                                       ║
-  ║     → Each auto-refresh = ~100 units                                     ║
-  ║     → Auto-refresh every 30 min = ~48 searches/day = 4,800 units        ║
-  ║     → Safe headroom for manual searches too                              ║
-  ║                                                                          ║
-  ╚══════════════════════════════════════════════════════════════════════════╝
+  â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•—
+  â•‘         JCB OPS LIVE â€“ HEAVY MACHINERY OPERATIONS CENTER v3.0           â•‘
+  â• â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•£
+  â•‘                                                                          â•‘
+  â•‘  SETUP CHECKLIST:                                                        â•‘
+  â•‘                                                                          â•‘
+  â•‘  1. YOUTUBE API KEY (required for auto-refresh):                         â•‘
+  â•‘     â†’ console.cloud.google.com                                           â•‘
+  â•‘     â†’ New Project â†’ Enable "YouTube Data API v3"                         â•‘
+  â•‘     â†’ Credentials â†’ Create API Key                                       â•‘
+  â•‘     â†’ Paste below: const YT_API_KEY = "YOUR_KEY_HERE"                   â•‘
+  â•‘                                                                          â•‘
+  â•‘  2. GOOGLE ADSENSE (monetization):                                       â•‘
+  â•‘     â†’ adsense.google.com â†’ Sign up with your site URL                   â•‘
+  â•‘     â†’ Get approved (takes 1â€“2 weeks, need some traffic first)            â•‘
+  â•‘     â†’ Replace YOUR_ADSENSE_CLIENT and YOUR_AD_SLOT placeholders below   â•‘
+  â•‘     â†’ AdSense auto-ads also work â€” just paste their <script> in <head>  â•‘
+  â•‘                                                                          â•‘
+  â•‘  3. GITHUB PAGES DEPLOY:                                                 â•‘
+  â•‘     â†’ Create repo â†’ upload as index.html                                 â•‘
+  â•‘     â†’ Settings â†’ Pages â†’ Deploy from main                                â•‘
+  â•‘     â†’ Live in 2â€“5 minutes at yourusername.github.io/reponame            â•‘
+  â•‘                                                                          â•‘
+  â•‘  4. QUOTA NOTES:                                                         â•‘
+  â•‘     â†’ Free tier = 10,000 units/day                                       â•‘
+  â•‘     â†’ Each auto-refresh = ~100 units                                     â•‘
+  â•‘     â†’ Auto-refresh every 30 min = ~48 searches/day = 4,800 units        â•‘
+  â•‘     â†’ Safe headroom for manual searches too                              â•‘
+  â•‘                                                                          â•‘
+  â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="JCB OPS LIVE – Real-time heavy machinery operations center. Watch live JCB excavators, bulldozers and construction sites from India and worldwide.">
+<meta name="description" content="JCB OPS LIVE â€“ Real-time heavy machinery operations center. Watch live JCB excavators, bulldozers and construction sites from India and worldwide.">
 <meta name="keywords" content="JCB live, excavator live stream, heavy machinery, construction live cam, JCB India">
-<title>OPS LIVE • Global Live Operations Center</title>
+<title>OPS LIVE â€¢ Global Live Operations Center</title>
 
-<!-- ═══ GOOGLE ADSENSE ═══════════════════════════════════════════════════
+<!-- â•â•â• GOOGLE ADSENSE â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
      Replace with your actual AdSense script tag after approval.
      Example:
      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXX" crossorigin="anonymous"></script>
-═══════════════════════════════════════════════════════════════════════ -->
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <!-- ADSENSE_SCRIPT_PLACEHOLDER -->
 
 <!-- Fonts -->
@@ -55,9 +55,9 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <style>
-/* ═══════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    VARIABLES
-═══════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 :root {
   --bg-void:       #080a0c;
   --bg-panel:      #0d1117;
@@ -92,9 +92,9 @@ body::before {
   pointer-events: none;
 }
 
-/* ═══════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    LAYOUT
-═══════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 #app {
   display: grid;
   grid-template-rows: 56px 1fr 52px;
@@ -102,9 +102,9 @@ body::before {
   height: 100vh;
 }
 
-/* ═══════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    TOP BAR
-═══════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 #topbar {
   grid-column: 1 / -1;
   background: linear-gradient(90deg,#0a1520,#0d1a28 50%,#0a1520);
@@ -159,21 +159,21 @@ body::before {
 }
 @keyframes live-flash { 0%,100%{opacity:1} 50%{opacity:.6} }
 
-/* ═══════════════════════════════════
-   AD SLOT — TOP LEADERBOARD
-═══════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   AD SLOT â€” TOP LEADERBOARD
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 #ad-top {
   grid-column: 1 / -1;
-  display: none; /* shown after AdSense approval — set display:flex */
+  display: none; /* shown after AdSense approval â€” set display:flex */
   align-items: center; justify-content: center;
   height: 90px; background: rgba(13,17,23,0.9);
   border-bottom: 1px solid var(--border);
   font-family: var(--font-hud); font-size: 8px; letter-spacing: 2px; color: var(--text-faint);
 }
 
-/* ═══════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    MAIN AREA
-═══════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 #main-content {
   grid-column: 1; grid-row: 2;
   display: grid; grid-template-rows: 220px 1fr;
@@ -228,9 +228,9 @@ body::before {
 
 #video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
 
-/* ═══════════════════════════════════
-   AD SLOT — MID GRID (between video rows)
-═══════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   AD SLOT â€” MID GRID (between video rows)
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .ad-mid-slot {
   grid-column: 1 / -1;
   min-height: 90px;
@@ -240,7 +240,7 @@ body::before {
   display: flex; align-items: center; justify-content: center;
   font-family: var(--font-hud); font-size: 7px; letter-spacing: 2px; color: var(--text-faint);
 }
-/* Hide ad placeholders until AdSense active — remove this rule after approval */
+/* Hide ad placeholders until AdSense active â€” remove this rule after approval */
 .ad-mid-slot { display: none; }
 
 /* VIDEO CARD */
@@ -287,9 +287,9 @@ body::before {
 .card-location { font-size: 9px; color: var(--text-dim); font-family: var(--font-data); }
 .card-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green-ok); box-shadow: 0 0 6px var(--green-ok); animation: dot-blink 1.4s infinite; }
 
-/* ═══════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    SIDEBAR
-═══════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 #sidebar {
   grid-column: 2; grid-row: 2 / 4;
   background: var(--bg-panel); border-left: 1px solid var(--border);
@@ -315,9 +315,9 @@ body::before {
 .m-bar-fill { height: 100%; background: var(--orange); border-radius: 2px; transition: width 2s ease; }
 .m-pct { font-family: var(--font-hud); font-size: 7px; color: var(--text-dim); }
 
-/* ═══════════════════════════════════
-   AD SLOT — SIDEBAR
-═══════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   AD SLOT â€” SIDEBAR
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 #ad-sidebar {
   flex-shrink: 0;
   min-height: 250px;
@@ -374,9 +374,9 @@ body::before {
 }
 @keyframes shimmer { 0%{opacity:0} 50%{opacity:1} 100%{opacity:0} }
 
-/* ═══════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    BOTTOM BAR
-═══════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 #bottombar {
   grid-column: 1; grid-row: 3;
   background: linear-gradient(90deg,#0a1520,#0d1a28);
@@ -409,9 +409,9 @@ body::before {
 .conn-ind   { display: flex; align-items: center; gap: 6px; font-family: var(--font-hud); font-size: 8px; letter-spacing: 1.5px; color: var(--green-ok); }
 .conn-dot   { width: 6px; height: 6px; border-radius: 50%; background: var(--green-ok); box-shadow: 0 0 6px var(--green-ok); animation: dot-blink 1.4s infinite; }
 
-/* ═══════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    NOTIFICATIONS
-═══════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 /* Notification toast */
 #toast {
@@ -448,12 +448,12 @@ body::before {
 <body>
 <div id="app">
 
-<!-- ══════════════════════════════════════
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
      TOP BAR
-══════════════════════════════════════ -->
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <div id="topbar">
   <div class="brand">
-    <div class="brand-icon">🚜</div>
+    <div class="brand-icon">ðŸšœ</div>
     <div>
       <div class="brand-title">OPS LIVE</div>
       <div class="brand-sub">GLOBAL LIVE OPERATIONS CENTER</div>
@@ -471,25 +471,25 @@ body::before {
     <span id="refresh-status">AUTO-REFRESH ON</span>
   </div>
   <div class="vdiv"></div>
-  <div class="live-badge">● LIVE</div>
+  <div class="live-badge">â— LIVE</div>
 </div>
 
-<!-- ══════════════════════════════════════
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
      MAIN CONTENT
-══════════════════════════════════════ -->
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <div id="main-content">
 
   <!-- MAP -->
   <div id="map-container">
-    <div class="map-label">⚡ TACTICAL OPS MAP — ACTIVE SITES</div>
-    <div class="map-coords" id="map-coords">LAT: 22.5000° N &nbsp;|&nbsp; LNG: 80.0000° E &nbsp;|&nbsp; ZOOM: 5</div>
+    <div class="map-label">âš¡ TACTICAL OPS MAP â€” ACTIVE SITES</div>
+    <div class="map-coords" id="map-coords">LAT: 22.5000Â° N &nbsp;|&nbsp; LNG: 80.0000Â° E &nbsp;|&nbsp; ZOOM: 5</div>
     <div id="map"></div>
   </div>
 
   <!-- VIDEO GRID -->
   <div id="video-grid-section">
     <div class="grid-header">
-      <div class="grid-title">⬛ LIVE FEED MATRIX — CLICK CAM TO FOCUS</div>
+      <div class="grid-title">â¬› LIVE FEED MATRIX â€” CLICK CAM TO FOCUS</div>
       <div class="grid-meta">
         <div id="next-refresh-label">NEXT REFRESH: --:--</div>
         <div class="grid-count" id="grid-count">0 STREAMS</div>
@@ -502,9 +502,9 @@ body::before {
 
 </div>
 
-<!-- ══════════════════════════════════════
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
      SIDEBAR
-══════════════════════════════════════ -->
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <div id="sidebar">
 
   <div class="s-head">ACTIVE UNITS <span class="s-badge" id="unit-count">0</span></div>
@@ -527,7 +527,7 @@ body::before {
 
   <div id="dust-meter">
     <div class="dust-label">
-      <div class="dust-title">⚠ DUST CLOUD INDEX</div>
+      <div class="dust-title">âš  DUST CLOUD INDEX</div>
       <div class="dust-val" id="dust-pct">72%</div>
     </div>
     <div class="dust-bg"><div class="dust-fill" id="dust-fill" style="width:72%"></div></div>
@@ -535,15 +535,15 @@ body::before {
 
 </div>
 
-<!-- ══════════════════════════════════════
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
      BOTTOM BAR
-══════════════════════════════════════ -->
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <div id="bottombar">
-  <button class="btn" onclick="triggerDustAlert()"><span>💨</span><span>DUST ALERT</span></button>
-  <button class="btn" onclick="replayLastDig()"><span>⚡</span><span>REPLAY DIG</span></button>
-  <button class="btn" onclick="shareOps()"><span>🔗</span><span>SHARE OPS</span></button>
+  <button class="btn" onclick="triggerDustAlert()"><span>ðŸ’¨</span><span>DUST ALERT</span></button>
+  <button class="btn" onclick="replayLastDig()"><span>âš¡</span><span>REPLAY DIG</span></button>
+  <button class="btn" onclick="shareOps()"><span>ðŸ”—</span><span>SHARE OPS</span></button>
   <div class="bar-status">
-    <div class="conn-ind"><div class="conn-dot"></div><span>CONNECTED • REAL TIME</span></div>
+    <div class="conn-ind"><div class="conn-dot"></div><span>CONNECTED â€¢ REAL TIME</span></div>
   </div>
 </div>
 
@@ -557,9 +557,9 @@ body::before {
 <script>
 const YT_API_KEY = "AIzaSyAAaYCRlGHKopxwMBwSxjZxo06ZpADPclY";
 
-/* ══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    AUTO-REFRESH CONFIG
-══════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 const REFRESH_INTERVAL_MS = 30 * 60 * 1000; // 30 minutes
 const SEARCH_QUERIES = [
   "JCB excavator digging",
@@ -569,77 +569,43 @@ const SEARCH_QUERIES = [
   "bulldozer heavy equipment"
 ];
 
-/* ══════════════════════════════════════════════════
-   HARDCODED STREAMS — 12 quality picks
-══════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   HARDCODED STREAMS â€” 12 quality picks
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 const HARDCODED = [
-  // ═══ VERIFIED 24/7 LIVE STREAMS — Official channels, always embeddable ═══
+  { id:"CAM-01", title:"🚜 Excavator Working Site",
+    videoId:"dQw4w9WgXcQ", location:"GLOBAL SITE", lat:20, lng:78, type:"excavator" },
 
-  // NASA ISS Live — Earth from Space (official NASA YouTube, 24/7, always on)
-  { id:"CAM-01", title:"🌍 NASA ISS LIVE – Earth from Space 24/7",
-    videoId:"P5_GlAOCHyE", location:"ISS ORBIT • 408KM ALTITUDE", lat:20.0, lng:78.0, type:"construction" },
+  { id:"CAM-02", title:"🏗 Construction Machine Work",
+    videoId:"ysz5S6PUM-U", location:"CONSTRUCTION ZONE", lat:22, lng:75, type:"construction" },
 
-  // NASA Johnson Space Center official live stream
-  { id:"CAM-02", title:"🚀 NASA Johnson Space Center – Mission Live",
-    videoId:"21X5lGlDOfg", location:"NASA JSC • HOUSTON TEXAS", lat:29.5, lng:-95.0, type:"crane" },
-
-  // Volcano Observatory — Kilauea Hawaii USGS live cam (official govt stream)
-  { id:"CAM-03", title:"🌋 USGS Kilauea Volcano – Live Eruption Cam",
-    videoId:"vHO2gJGMqg8", location:"KILAUEA • HAWAII LIVE", lat:19.4, lng:-155.2, type:"excavator" },
-
-  // EarthCam Times Square NYC — always live, official embed
-  { id:"CAM-04", title:"🗽 Times Square NYC – Live Street Cam",
-    videoId:"AdUw5RdyZxI", location:"NEW YORK • TIMES SQUARE", lat:40.7, lng:-74.0, type:"construction" },
-
-  // Monterey Bay Aquarium — deep sea live cam (official, massive audience)
-  { id:"CAM-05", title:"🦈 Monterey Bay Aquarium – Open Sea Live",
-    videoId:"OTDBhB5YZXY", location:"PACIFIC OCEAN • DEEP SEA CAM", lat:36.6, lng:-121.9, type:"excavator" },
-
-  // San Diego Zoo Wildlife Alliance — official 24/7 animal cams
-  { id:"CAM-06", title:"🦁 San Diego Zoo – Wildlife Live Cam",
-    videoId:"KF3M2eTYxf4", location:"SAN DIEGO ZOO • CALIFORNIA", lat:32.7, lng:-117.1, type:"excavator" },
-
-  // Live Storm Chasing — official Tempest Tours live feed
-  { id:"CAM-07", title:"🌪️ LIVE Storm Chasing – Tornado Alley USA",
-    videoId:"k2_WRTqSems", location:"OKLAHOMA • TORNADO ALLEY", lat:35.5, lng:-97.5, type:"bulldozer" },
-
-  // Port of Rotterdam — world's largest port, ship traffic 24/7
-  { id:"CAM-08", title:"⚓ Port of Rotterdam – Live Ship Traffic",
-    videoId:"uREGNVAtbT8", location:"ROTTERDAM PORT • NETHERLANDS", lat:51.9, lng:4.5, type:"truck" },
-
-  // Mining operations — official Rio Tinto channel mine operations
-  { id:"CAM-09", title:"⛏️ Open Pit Mine – Live Heavy Operations",
-    videoId:"3_CRkhG1ePM", location:"AUSTRALIA • OPEN PIT MINE", lat:-23.7, lng:133.8, type:"excavator" },
-
-  // Yellowstone Geyser — NPS official live cam
-  { id:"CAM-10", title:"💥 Old Faithful Geyser – Live Yellowstone Cam",
-    videoId:"2S4JgE0TiOE", location:"YELLOWSTONE NPS • WYOMING", lat:44.4, lng:-110.5, type:"construction" },
+  { id:"CAM-03", title:"🚛 Heavy Equipment Action",
+    videoId:"aqz-KE-bpKQ", location:"INDUSTRIAL AREA", lat:19, lng:72, type:"truck" }
 ];
-
 const MACHINES = [
-  { emoji:"🚜", name:"JCB-ALPHA",  site:"Delhi Metro Zone",   load:88 },
-  { emoji:"🏗️", name:"CRANE-07",  site:"Mumbai Skyrise",     load:62 },
-  { emoji:"🚛", name:"DUMP-12X",  site:"Karnataka Quarry",   load:95 },
-  { emoji:"⛏️", name:"DRILL-3B",  site:"Rajasthan Road",     load:71 },
-  { emoji:"🚜", name:"JCB-BRAVO", site:"Pune Site-4",        load:84 },
-  { emoji:"🚛", name:"HAUL-09K",  site:"Gujarat Mine",       load:55 },
+  { emoji:"ðŸšœ", name:"JCB-ALPHA",  site:"Delhi Metro Zone",   load:88 },
+  { emoji:"ðŸ—ï¸", name:"CRANE-07",  site:"Mumbai Skyrise",     load:62 },
+  { emoji:"ðŸš›", name:"DUMP-12X",  site:"Karnataka Quarry",   load:95 },
+  { emoji:"â›ï¸", name:"DRILL-3B",  site:"Rajasthan Road",     load:71 },
+  { emoji:"ðŸšœ", name:"JCB-BRAVO", site:"Pune Site-4",        load:84 },
+  { emoji:"ðŸš›", name:"HAUL-09K",  site:"Gujarat Mine",       load:55 },
 ];
 
 const LOG_TMPL = [
   { t:"dig",   f:(m,s)=>`<span class="h">${m}</span> breaking <span class="o">HARD ROCK</span> at <span class="h">${s}</span>` },
   { t:"move",  f:(m,s)=>`<span class="h">${m}</span> bucket load <span class="c">+2.4T</span> transferred at <span class="h">${s}</span>` },
-  { t:"load",  f:(m,s)=>`Dump truck <span class="y">LOADED</span> — <span class="h">${m}</span> continuing at <span class="h">${s}</span>` },
-  { t:"alert", f:(m,s)=>`⚠ <span class="r">DUST CLOUD</span> at <span class="h">${s}</span> — visibility reduced` },
-  { t:"ok",    f:(m,s)=>`<span class="g">✓ CLEAR PASS</span> — <span class="h">${m}</span> depth +0.8m at <span class="h">${s}</span>` },
-  { t:"dig",   f:(m,s)=>`<span class="h">${m}</span> <span class="o">DIGGING HARD</span> — 3rd pass at <span class="h">${s}</span>` },
+  { t:"load",  f:(m,s)=>`Dump truck <span class="y">LOADED</span> â€” <span class="h">${m}</span> continuing at <span class="h">${s}</span>` },
+  { t:"alert", f:(m,s)=>`âš  <span class="r">DUST CLOUD</span> at <span class="h">${s}</span> â€” visibility reduced` },
+  { t:"ok",    f:(m,s)=>`<span class="g">âœ“ CLEAR PASS</span> â€” <span class="h">${m}</span> depth +0.8m at <span class="h">${s}</span>` },
+  { t:"dig",   f:(m,s)=>`<span class="h">${m}</span> <span class="o">DIGGING HARD</span> â€” 3rd pass at <span class="h">${s}</span>` },
   { t:"move",  f:(m,s)=>`<span class="h">${m}</span> repositioning to <span class="c">SECTOR-7</span> at <span class="h">${s}</span>` },
   { t:"ok",    f:(m,s)=>`<span class="g">FOUNDATION DEPTH</span> confirmed at <span class="h">${s}</span>` },
-  { t:"alert", f:(m,s)=>`🔔 Rock density <span class="r">ELEVATED</span> at <span class="h">${s}</span>` },
+  { t:"alert", f:(m,s)=>`ðŸ”” Rock density <span class="r">ELEVATED</span> at <span class="h">${s}</span>` },
 ];
 
-/* ══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    STATE
-══════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 let streams        = [...HARDCODED];
 let map            = null;
 let mapMarkers     = [];
@@ -655,28 +621,28 @@ let nextRefreshAt  = null;
 
 let adSlotInserted = false;
 
-/* ══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    MAP
-══════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 function initMap() {
   map = L.map('map', { center:[22.5,80.0], zoom:5, zoomControl:true });
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    attribution:'© OpenStreetMap © CARTO', subdomains:'abcd', maxZoom:19
+    attribution:'Â© OpenStreetMap Â© CARTO', subdomains:'abcd', maxZoom:19
   }).addTo(map);
   map.on('moveend zoomend', () => {
     const c = map.getCenter(), z = map.getZoom();
     document.getElementById('map-coords').innerHTML =
-      `LAT: ${c.lat.toFixed(4)}° N &nbsp;|&nbsp; LNG: ${c.lng.toFixed(4)}° E &nbsp;|&nbsp; ZOOM: ${z}`;
+      `LAT: ${c.lat.toFixed(4)}Â° N &nbsp;|&nbsp; LNG: ${c.lng.toFixed(4)}Â° E &nbsp;|&nbsp; ZOOM: ${z}`;
   });
   streams.forEach((s,i) => addMarker(s,i));
 }
 
-const typeEmoji = { excavator:'⛏️', bulldozer:'🚜', construction:'🏗️', truck:'🚛', crane:'🔩', jcb:'🚜' };
+const typeEmoji = { excavator:'â›ï¸', bulldozer:'ðŸšœ', construction:'ðŸ—ï¸', truck:'ðŸš›', crane:'ðŸ”©', jcb:'ðŸšœ' };
 
 function addMarker(stream) {
   if (!stream.lat) return;
   const icon = L.divIcon({
-    html:`<div class="machine-marker">${typeEmoji[stream.type]||'🚜'}</div>`,
+    html:`<div class="machine-marker">${typeEmoji[stream.type]||'ðŸšœ'}</div>`,
     className:'', iconSize:[32,32], iconAnchor:[16,16]
   });
   const m = L.marker([stream.lat, stream.lng], { icon })
@@ -684,7 +650,7 @@ function addMarker(stream) {
     .bindPopup(`
       <strong style="color:var(--orange);font-family:var(--font-hud);font-size:10px">${stream.id}</strong><br>
       <span style="color:var(--text-dim);font-size:9px">${stream.title}</span><br>
-      <span style="color:var(--cyan);font-size:9px">📍 ${stream.location}</span>
+      <span style="color:var(--cyan);font-size:9px">ðŸ“ ${stream.location}</span>
     `)
     .on('click', () => { focusCard(stream.id); digFlash(stream.lat, stream.lng); });
   mapMarkers.push({ m, stream });
@@ -701,9 +667,9 @@ function digFlash(lat, lng) {
   setTimeout(() => el.remove(), 1200);
 }
 
-/* ══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    VIDEO GRID
-══════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 function renderGrid() {
   const grid = document.getElementById('video-grid');
   grid.innerHTML = '';
@@ -721,7 +687,7 @@ function renderGrid() {
                data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
           <script>(adsbygoogle = window.adsbygoogle || []).push({});<\/script>
         -->
-        ADVERTISEMENT SLOT — ACTIVATE AFTER ADSENSE APPROVAL
+        ADVERTISEMENT SLOT â€” ACTIVATE AFTER ADSENSE APPROVAL
       `;
       grid.appendChild(adDiv);
       adSlotInserted = true;
@@ -757,11 +723,11 @@ function makeVideoHTML(s, isNew=false) {
         <div class="card-thumb-play">
           <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
         </div>
-        <div class="card-thumb-label">▶ CLICK TO PLAY</div>
+        <div class="card-thumb-label">â–¶ CLICK TO PLAY</div>
       </div>
     </div>
     <div class="card-footer">
-      <div class="card-location">📍 ${s.location}</div>
+      <div class="card-location">ðŸ“ ${s.location}</div>
       <div class="card-dot"></div>
     </div>
   `;
@@ -800,9 +766,9 @@ function focusCard(id) {
   if (ms) { ms.m.openPopup(); digFlash(ms.stream.lat, ms.stream.lng); }
 }
 
-/* ══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    MACHINE STATUS
-══════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 function renderMachines() {
   document.getElementById('machine-status').innerHTML = MACHINES.map(m => `
     <div class="m-row">
@@ -820,9 +786,9 @@ function renderMachines() {
   document.getElementById('unit-count').textContent = MACHINES.length;
 }
 
-/* ══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    ACTION LOG
-══════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 function addLog(type, html) {
   const log = document.getElementById('action-log');
   const now = new Date().toTimeString().substring(0,8);
@@ -847,9 +813,9 @@ function randomLog() {
   addLog(evt.t, evt.f(m,s));
 }
 
-/* ══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    LIVE COUNTERS
-══════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 function tickCounters() {
   tonsCount += Math.floor(Math.random()*8)+1;
   document.getElementById('cnt-tons').textContent = tonsCount.toLocaleString();
@@ -870,9 +836,9 @@ function tickCounters() {
   document.getElementById('dust-pct').textContent  = `${Math.round(dustLevel)}%`;
 }
 
-/* ══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    YOUTUBE API
-══════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 async function fetchYT(apiKey, liveOnly) {
   const q = SEARCH_QUERIES[Math.floor(Math.random() * SEARCH_QUERIES.length)];
 
@@ -905,7 +871,7 @@ async function fetchYT(apiKey, liveOnly) {
 async function doRefresh(silent = false) {
   const key = YT_API_KEY;
   setRefreshing(true);
-  if (!silent) toast('📡 SCANNING FOR STREAMS...', 'orange');
+  if (!silent) toast('ðŸ“¡ SCANNING FOR STREAMS...', 'orange');
 
   try {
     let items = [];
@@ -921,7 +887,7 @@ async function doRefresh(silent = false) {
         id: `API-${String(idx).padStart(2,'0')}`,
         title: item.snippet.title.substring(0,52),
         videoId,
-        location: `LIVE • ${item.snippet.channelTitle.substring(0,18).toUpperCase()}`,
+        location: `LIVE â€¢ ${item.snippet.channelTitle.substring(0,18).toUpperCase()}`,
         lat: 18 + Math.random()*14,
         lng: 70 + Math.random()*16,
         type: "excavator",
@@ -930,17 +896,17 @@ async function doRefresh(silent = false) {
       streams.push(newS);
       addMarker(newS);
       appendCard(newS);
-      addLog('api', `<span class="c">▶ NEW STREAM ACQUIRED</span> — <span class="h">${newS.id}</span> added to grid`);
+      addLog('api', `<span class="c">â–¶ NEW STREAM ACQUIRED</span> â€” <span class="h">${newS.id}</span> added to grid`);
       added++;
       await new Promise(r => setTimeout(r, 300));
     }
 
-    if (added > 0) toast(`✓ ${added} NEW STREAM${added>1?'S':''} ACQUIRED`, 'green');
-    else if (!silent) toast('⚠ NO NEW STREAMS FOUND', 'orange');
+    if (added > 0) toast(`âœ“ ${added} NEW STREAM${added>1?'S':''} ACQUIRED`, 'green');
+    else if (!silent) toast('âš  NO NEW STREAMS FOUND', 'orange');
 
   } catch(err) {
     console.error('YT API error:', err);
-    if (!silent) toast('✕ API ERROR — CHECK KEY IN SETUP', 'orange');
+    if (!silent) toast('âœ• API ERROR â€” CHECK KEY IN SETUP', 'orange');
   } finally {
     setRefreshing(false);
     if (autoRefresh) scheduleRefresh();
@@ -954,9 +920,9 @@ function setRefreshing(on) {
   label.textContent = on ? 'REFRESHING...' : (autoRefresh ? 'AUTO-REFRESH ON' : 'AUTO-REFRESH OFF');
 }
 
-/* ══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    AUTO-REFRESH SCHEDULER
-══════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 function scheduleRefresh() {
   clearTimeout(refreshTimer);
   clearInterval(countdownTimer);
@@ -979,15 +945,15 @@ function scheduleRefresh() {
 
 
 
-/* ══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    BUTTON ACTIONS
-══════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 function triggerDustAlert() {
   dustLevel = Math.min(98, dustLevel + 20);
   document.getElementById('dust-fill').style.width = `${Math.round(dustLevel)}%`;
   document.getElementById('dust-pct').textContent  = `${Math.round(dustLevel)}%`;
-  toast('⚠ DUST ALERT — HIGH PARTICULATE DETECTED', 'orange');
-  addLog('alert','<span class="r">⚠ DUST CLOUD EVENT</span> — visibility reduced across active sites');
+  toast('âš  DUST ALERT â€” HIGH PARTICULATE DETECTED', 'orange');
+  addLog('alert','<span class="r">âš  DUST CLOUD EVENT</span> â€” visibility reduced across active sites');
   if (map) {
     const s = streams[Math.floor(Math.random()*streams.length)];
     if (s?.lat) [0,250,500].forEach(d => setTimeout(()=>digFlash(s.lat+(Math.random()-.5), s.lng+(Math.random()-.5)),d));
@@ -997,21 +963,21 @@ function triggerDustAlert() {
 function replayLastDig() {
   const target = lastDigLatLng || (streams[0] ? { lat:streams[0].lat, lng:streams[0].lng } : null);
   if (target) [0,200,400].forEach(d => setTimeout(()=>digFlash(target.lat,target.lng),d));
-  toast('⚡ REPLAYING LAST DIG EVENT', 'orange');
-  addLog('dig','<span class="o">⚡ DIG REPLAY</span> — last impact sequence reconstructed');
+  toast('âš¡ REPLAYING LAST DIG EVENT', 'orange');
+  addLog('dig','<span class="o">âš¡ DIG REPLAY</span> â€” last impact sequence reconstructed');
 }
 
 function shareOps() {
   const url = window.location.href;
   if (navigator.share) navigator.share({ title:'JCB OPS LIVE', url });
-  else if (navigator.clipboard) { navigator.clipboard.writeText(url); toast('🔗 URL COPIED TO CLIPBOARD', 'cyan'); }
+  else if (navigator.clipboard) { navigator.clipboard.writeText(url); toast('ðŸ”— URL COPIED TO CLIPBOARD', 'cyan'); }
 }
 
 
 
-/* ══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    TOAST
-══════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 let toastTimer = null;
 function toast(msg, type='orange') {
   const el = document.getElementById('toast');
@@ -1021,9 +987,9 @@ function toast(msg, type='orange') {
   toastTimer = setTimeout(() => el.className = '', 3200);
 }
 
-/* ══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    COUNTER ANIMATION
-══════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 function animateCount(id, target, dur=1200, pad=0) {
   const el = document.getElementById(id);
   const t0 = Date.now();
@@ -1036,9 +1002,9 @@ function animateCount(id, target, dur=1200, pad=0) {
   requestAnimationFrame(tick);
 }
 
-/* ══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    RANDOM DIG FLASH ON MAP
-══════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 function scheduleFlash() {
   const delay = 8000 + Math.random()*7000;
   setTimeout(() => {
@@ -1050,16 +1016,16 @@ function scheduleFlash() {
   }, delay);
 }
 
-/* ══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    BOOT
-══════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 window.addEventListener('DOMContentLoaded', () => {
   // Boot log
   const boot = [
-    { t:'ok',   h:`<span class="g">SYSTEM ONLINE</span> — JCB OPS LIVE v3.0 INITIALIZED` },
-    { t:'move', h:`<span class="c">MAP GRID LOADED</span> — ${streams.length} sites registered` },
-    { t:'dig',  h:`<span class="o">FEED MATRIX ACTIVE</span> — ${streams.length} cameras streaming` },
-    { t:'ok',   h:`<span class="g">AUTO-REFRESH ARMED</span> — 30-minute discovery cycle ready` },
+    { t:'ok',   h:`<span class="g">SYSTEM ONLINE</span> â€” JCB OPS LIVE v3.0 INITIALIZED` },
+    { t:'move', h:`<span class="c">MAP GRID LOADED</span> â€” ${streams.length} sites registered` },
+    { t:'dig',  h:`<span class="o">FEED MATRIX ACTIVE</span> â€” ${streams.length} cameras streaming` },
+    { t:'ok',   h:`<span class="g">AUTO-REFRESH ARMED</span> â€” 30-minute discovery cycle ready` },
   ];
   boot.reverse().forEach((b,i) => {
     const log = document.getElementById('action-log');
@@ -1090,20 +1056,21 @@ window.addEventListener('DOMContentLoaded', () => {
 
   scheduleFlash();
 
-  // Auto-refresh always active — key hardcoded
+  // Auto-refresh always active â€” key hardcoded
   scheduleRefresh();
-  toast('📡 AUTO-REFRESH ARMED — 30 MIN CYCLE', 'cyan');
-  addLog('api', `<span class="g">✓ SYSTEMS ARMED</span> — auto-refresh <span class="c">SCHEDULED</span>`);
+  toast('ðŸ“¡ AUTO-REFRESH ARMED â€” 30 MIN CYCLE', 'cyan');
+  addLog('api', `<span class="g">âœ“ SYSTEMS ARMED</span> â€” auto-refresh <span class="c">SCHEDULED</span>`);
 
   console.log(`
-   ╔══════════════════════════════════════════╗
-   ║    JCB OPS LIVE v3.0 — SYSTEMS ONLINE   ║
-   ║  Auto-refresh: every 30 minutes          ║
-   ║  Quota usage:  ~4,800 units/day          ║
-   ║  AdSense slots: ready for activation     ║
-   ╚══════════════════════════════════════════╝
+   â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•—
+   â•‘    JCB OPS LIVE v3.0 â€” SYSTEMS ONLINE   â•‘
+   â•‘  Auto-refresh: every 30 minutes          â•‘
+   â•‘  Quota usage:  ~4,800 units/day          â•‘
+   â•‘  AdSense slots: ready for activation     â•‘
+   â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   `);
 });
 </script>
 </body>
 </html>
+
